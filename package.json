@@ -1,0 +1,19 @@
+{
+  "name": "red",
+  "version": "1.0.0",
+  "description": "Red Application Server",
+  "main": "server.js",
+  "scripts": {
+    "test": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ServerRed/Red.git"
+  },
+  "author": "Red Team Contributors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ServerRed/Red/issues"
+  },
+  "homepage": "https://github.com/ServerRed/Red#readme"
+}
