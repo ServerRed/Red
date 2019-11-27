@@ -11,7 +11,7 @@ const HTTP_PORT = 8000;
 const HTTP_HOST = '127.0.0.1';
 const INDEX = 'index.html';
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   let url = decodeURI(req.url);
   if (url[url.length - 1] === '/') url += INDEX;
   console.log(url);
@@ -24,7 +24,7 @@ const server = http.createServer((req, res) => {
     const fileName = API_DIR + '/' + methodName + '.js';
     try {
       const method = require(fileName);
-      const result = method(...parameters);
+      const result = await method(...parameters);
       res.end(JSON.stringify(result));
     } catch (error) {
       res.end('{message:"ERROR 500"}');

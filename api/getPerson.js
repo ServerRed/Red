@@ -1,12 +1,10 @@
 'use strict';
 
-const persons = {
-  marcus: { name: 'Marcus Aurelous', born: 121 },
-  mao: { name: 'Mao Zedong', born: 1893 },
-};
+const fs = require('fs').promises;
+const PERSONS_PATH = './data/persons/';
 
-module.exports = id => {
-  const person = persons[id];
-  if (person) return person;
-  return 'Person not found';
+module.exports = async id => {
+  const fileName = PERSONS_PATH + id + '.json';
+  const data = await fs.readFile(fileName, 'utf8');
+  return JSON.parse(data);
 };
