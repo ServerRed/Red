@@ -5,22 +5,13 @@ const http = require('http');
 const path = require('path');
 
 const config = require('./config.js');
-const db = require('./db.js')(config.database);
+const db = require('./lib/db.js')(config.database);
+global.db = db;
 
-const sql = 'SELECT * FROM SystemUser';
-console.dir({ sql });
-db.query(sql, (err, data) => {
-  if (err) {
-    console.log(err.message);
-    return;
-  }
-  console.log(JSON.stringify(data.rows) + '\n');
-});
-
-
-const { Logger } = require('./logger.js');
+const { Logger } = require('./lib/logger.js');
 const date = new Date().toISOString().split('T')[0];
 const logger  = new Logger('./logs/' + date + '.log');
+global.logger = logger;
 
 const DIR = process.cwd();
 const STATIC_DIR = path.join(DIR, 'static');
@@ -42,9 +33,10 @@ const server = http.createServer(async (req, res) => {
       const result = await method(...parameters);
       res.end(JSON.stringify(result));
       logger.info(`Execute ${url}`);
-    } catch (error) {
-      logger.error(`Error executing ${url}`);
+    } catch (err) {
+      logger.error(`Error executing ${url}: ${err.message}`);
       res.end('{message:"ERROR 500"}');
+      throw err;
     }
     return;
   }
