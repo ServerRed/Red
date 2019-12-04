@@ -9,6 +9,11 @@ ALTER TABLE SystemUser ADD CONSTRAINT pkSystemUser PRIMARY KEY (Id);
 
 CREATE UNIQUE INDEX akSystemUserLogin ON SystemUser (Login);
 
+INSERT INTO SystemUser VALUES
+  (1, 'admin', '123456'),
+  (2, 'marcus', 'nopassword'),
+  (3, 'iskandar', 'zulqarnayn');
+
 CREATE TABLE SystemGroup (
   Id    serial,
   Name  varchar(64) NOT NULL
@@ -17,6 +22,13 @@ CREATE TABLE SystemGroup (
 ALTER TABLE SystemGroup ADD CONSTRAINT pkSystemGroup PRIMARY KEY (Id);
 
 CREATE UNIQUE INDEX akSystemGroupName ON SystemGroup (Name);
+
+INSERT INTO SystemGroup VALUES
+  (1, 'Security'),
+  (2, 'Software'),
+  (3, 'Sales'),
+  (4, 'Planning'),
+  (5, 'Quality');
 
 CREATE TABLE GroupUser (
   GroupId  integer NOT NULL,

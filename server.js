@@ -5,6 +5,18 @@ const http = require('http');
 const path = require('path');
 
 const config = require('./config.js');
+const db = require('./db.js')(config.database);
+
+const sql = 'SELECT * FROM SystemUser';
+console.dir({ sql });
+db.query(sql, (err, data) => {
+  if (err) {
+    console.log(err.message);
+    return;
+  }
+  console.log(JSON.stringify(data.rows) + '\n');
+});
+
 
 const { Logger } = require('./logger.js');
 const date = new Date().toISOString().split('T')[0];

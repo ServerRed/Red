@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ServerRed/Red/issues"
   },
-  "homepage": "https://github.com/ServerRed/Red#readme"
+  "homepage": "https://github.com/ServerRed/Red#readme",
+  "dependencies": {
+    "pg": "^7.14.0"
+  }
 }
