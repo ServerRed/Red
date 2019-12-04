@@ -18,6 +18,11 @@ const STATIC_DIR = path.join(DIR, 'static');
 const API_DIR = path.join(DIR, 'api');
 const INDEX = 'index.html';
 
+const end = (res, code, message) => {
+  res.statusCode = code;
+  res.end(JSON.stringify({ code, message }));
+};
+
 const server = http.createServer(async (req, res) => {
   let url = decodeURI(req.url);
   if (url[url.length - 1] === '/') url += INDEX;
@@ -26,30 +31,28 @@ const server = http.createServer(async (req, res) => {
     parameters.shift();
     parameters.shift();
     const methodName = parameters.shift();
-    console.log({ methodName, parameters });
     const fileName = API_DIR + '/' + methodName + '.js';
     try {
+      logger.info(`Execute ${url}`);
       const method = require(fileName);
       const result = await method(...parameters);
       res.end(JSON.stringify(result));
-      logger.info(`Execute ${url}`);
     } catch (err) {
-      logger.error(`Error executing ${url}: ${err.message}`);
-      res.end('{message:"ERROR 500"}');
-      throw err;
+      logger.error(`Error executing ${url}: ${err.stack}`);
+      end(res, 500, 'Server error');
     }
     return;
   }
   const fileName = path.resolve(STATIC_DIR, './' + url);
   if (!fileName.startsWith(STATIC_DIR)) {
     logger.warn(`Hack detection ${url}`);
-    res.end('Please do not try to hack me');
+    end(res, 400, 'Bad request: Please do not try to hack me');
     return;
   }
   fs.readFile(fileName, 'utf8', (err, data) => {
     if (err) {
       logger.error(`File is not found ${url}`);
-      res.end('Error 404: File is not found');
+      end(res, 404, 'Error 404: File is not found');
       return;
     }
     res.end(data);
