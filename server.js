@@ -5,7 +5,8 @@ const http = require('http');
 const path = require('path');
 
 const { Logger } = require('./logger.js');
-const logger  = new Logger();
+const date = new Date().toISOString().split('T')[0];
+const logger  = new Logger('./logs/' + date + '.log');
 
 const DIR = process.cwd();
 const STATIC_DIR = path.join(DIR, 'static');

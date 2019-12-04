@@ -1,14 +1,23 @@
 'use strict';
 
+const fs = require('fs');
+
 class Logger {
   static color(level) {
     return Logger.COLORS[level] || Logger.COLORS.info;
   }
 
+  constructor(file) {
+    this.file = file;
+    this.stream = fs.createWriteStream(file, 'utf8');
+  }
+
   log(level, s) {
     const date = new Date().toISOString();
     const color = Logger.color(level);
-    console.log(color + date + '\t' + s + '\x1b[0m');
+    const msg = date + '\t' + s;
+    console.log(color + msg + '\x1b[0m');
+    this.stream.write(msg + '\n');
   }
 
   warn(s) {
