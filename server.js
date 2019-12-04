@@ -4,6 +4,8 @@ const fs = require('fs');
 const http = require('http');
 const path = require('path');
 
+const config = require('./config.js');
+
 const { Logger } = require('./logger.js');
 const date = new Date().toISOString().split('T')[0];
 const logger  = new Logger('./logs/' + date + '.log');
@@ -11,8 +13,6 @@ const logger  = new Logger('./logs/' + date + '.log');
 const DIR = process.cwd();
 const STATIC_DIR = path.join(DIR, 'static');
 const API_DIR = path.join(DIR, 'api');
-const HTTP_PORT = 8000;
-const HTTP_HOST = '127.0.0.1';
 const INDEX = 'index.html';
 
 const server = http.createServer(async (req, res) => {
@@ -52,6 +52,9 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-server.listen(HTTP_PORT);
+server.listen(config.http.port);
 
-console.log(`Server started at http://${HTTP_HOST}:${HTTP_PORT}/`);
+{
+  const url = `http://${config.http.host}:${config.http.port}`;
+  logger.info(`Server started at ${url}`);
+}
