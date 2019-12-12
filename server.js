@@ -27,17 +27,25 @@ const server = http.createServer(async (req, res) => {
   let url = decodeURI(req.url);
   if (url[url.length - 1] === '/') url += INDEX;
   if (url.startsWith('/api')) {
-    const parameters = url.split('/');
+    const [urlPath, urlQuery] = url.split('?');
+    const parameters = urlPath.split('/');
     parameters.shift();
     parameters.shift();
     const methodName = parameters.shift();
     const fileName = API_DIR + '/' + methodName + '.js';
+    const args = {};
+    const query = urlQuery.split('&');
+    for (const item of query) {
+      const [key, value] = item.split('=');
+      args[key] = value;
+    }
     try {
       logger.info(`Execute ${url}`);
       const method = require(fileName);
-      const result = await method(...parameters);
+      const result = await method(args);
       res.end(JSON.stringify(result));
     } catch (err) {
+      console.dir(err);
       logger.error(`Error executing ${url}: ${err.stack}`);
       end(res, 500, 'Server error');
     }
